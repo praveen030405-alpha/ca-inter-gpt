@@ -104,7 +104,7 @@ for message in st.session_state.chat_session.history:
                 st.markdown(part.text)
 
 # 7. User Input 
-if prompt := st.chat_input("Ask me...", accept_file=True, file_type=["png", "jpg", "jpeg", "pdf"]):
+if prompt := st.chat_input("Ask me...", accept_file="multiple", file_type=["png", "jpg", "jpeg", "pdf"]):
     
     user_text = prompt.text if prompt.text else ""
     uploaded_files = prompt["files"] if "files" in prompt else []
@@ -112,32 +112,34 @@ if prompt := st.chat_input("Ask me...", accept_file=True, file_type=["png", "jpg
     # Custom User Avatar
     with st.chat_message("user"):
         if uploaded_files:
-            file_ext = uploaded_files[0].name.split('.')[-1].lower()
-            if file_ext in ['png', 'jpg', 'jpeg']:
-                st.image(uploaded_files[0], width=300)
-            elif file_ext == 'pdf':
-                st.markdown(f"📄 **Uploaded PDF:** {uploaded_files[0].name}")
+            # Loop through ALL uploaded files to display them
+            for file in uploaded_files:
+                file_ext = file.name.split('.')[-1].lower()
+                if file_ext in ['png', 'jpg', 'jpeg']:
+                    st.image(file, width=300)
+                elif file_ext == 'pdf':
+                    st.markdown(f"📄 **Uploaded PDF:** {file.name}")
         if user_text:
             st.markdown(user_text)
 
-    # 8. AI Processing (Custom AI Avatar)
+    # 8. AI Processing
     with st.chat_message("assistant"):
         with st.spinner("Working on it..."):
             try:
                 contents = []
                 if uploaded_files:
-                    file = uploaded_files[0]
-                    file_ext = file.name.split('.')[-1].lower()
-                    
-                    if file_ext == 'pdf':
-                        pdf_reader = PyPDF2.PdfReader(file)
-                        pdf_text = ""
-                        for page in pdf_reader.pages:
-                            pdf_text += page.extract_text()
-                        contents.append(f"Reference this updated ICAI material for the evaluation: {pdf_text}")
-                    else:
-                        img = Image.open(file)
-                        contents.append(img)
+                    # Loop through ALL uploaded files to send them to the AI
+                    for file in uploaded_files:
+                        file_ext = file.name.split('.')[-1].lower()
+                        
+                        if file_ext == 'pdf':
+                            contents.append({
+                                "mime_type": "application/pdf",
+                                "data": file.getvalue()
+                            })
+                        else:
+                            img = Image.open(file)
+                            contents.append(img)
                 
                 if user_text:
                     contents.append(user_text)
