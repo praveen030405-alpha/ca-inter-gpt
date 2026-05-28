@@ -13,8 +13,6 @@ st.caption("Updated for Sept 2026 & Jan 2027 (Finance Act 2025)")
 try:
     # This works when deployed live on Streamlit Cloud
     API_KEY = st.secrets["API_KEY"]
-
-genai.configure(api_key=API_KEY)
 # --- ADMIN AMENDMENT DATA LOADER ---
 @st.cache_data
 def load_inbuilt_amendments():
