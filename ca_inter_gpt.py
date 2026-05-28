@@ -13,9 +13,6 @@ st.caption("Updated for Sept 2026 & Jan 2027 (Finance Act 2025)")
 try:
     # This works when deployed live on Streamlit Cloud
     API_KEY = st.secrets["API_KEY"]
-except Exception:
-    # This acts as your local backup so your offline app doesn't crash
-    API_KEY = "AIzaSyBBW9dk6qbP0kG7MzmzJTALmTvHYVbW_zY"
 
 genai.configure(api_key=API_KEY)
 # --- ADMIN AMENDMENT DATA LOADER ---
