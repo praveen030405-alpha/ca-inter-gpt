@@ -3,6 +3,7 @@ import google.generativeai as genai
 from PIL import Image
 import PyPDF2
 import os
+import tempfile
 
 # 1. Page Setup
 st.set_page_config(page_title="CA Inter - GPT", layout="centered")
@@ -131,10 +132,14 @@ if prompt := st.chat_input("Ask me...", accept_file="multiple", file_type=["png"
                         file_ext = file.name.split('.')[-1].lower()
                         
                         if file_ext == 'pdf':
-                            contents.append({
-                                "mime_type": "application/pdf",
-                                "data": file.getvalue()
-                            })
+                            # 1. Save the heavy file temporarily to the Streamlit cloud server
+                            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+                                temp_pdf.write(file.getvalue())
+                                temp_pdf_path = temp_pdf.name
+                            
+                            # 2. Upload it through Google's heavy-duty File API
+                            heavy_pdf = genai.upload_file(temp_pdf_path)
+                            contents.append(heavy_pdf)
                         else:
                             img = Image.open(file)
                             contents.append(img)
