@@ -15,7 +15,7 @@ try:
     API_KEY = st.secrets["API_KEY"]
 except Exception:
     # This acts as your local backup so your offline app doesn't crash
-    API_KEY = "AIzaSyAHoUT16KPx2MiEXOxPLhxQQAmZD8DNYFc"
+    API_KEY = "AIzaSyBBW9dk6qbP0kG7MzmzJTALmTvHYVbW_zY"
 
 genai.configure(api_key=API_KEY)
 # --- ADMIN AMENDMENT DATA LOADER ---
