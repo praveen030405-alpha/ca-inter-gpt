@@ -9,10 +9,13 @@ st.set_page_config(page_title="CA Inter - GPT", layout="centered")
 st.title("CA Inter - GPT")
 st.caption("Updated for Sept 2026 & Jan 2027 (Finance Act 2025)")
 
-# # 2. API Configuration (Smart Cloud + Local Fallback)
+# 2. API Configuration
 try:
-    # This works when deployed live on Streamlit Cloud
     API_KEY = st.secrets["API_KEY"]
+except Exception:
+    API_KEY = "LOCAL_BACKUP_KEY"
+
+genai.configure(api_key=API_KEY)
 # --- ADMIN AMENDMENT DATA LOADER ---
 @st.cache_data
 def load_inbuilt_amendments():
